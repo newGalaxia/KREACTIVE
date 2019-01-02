@@ -1,0 +1,3 @@
+services:
+    App.call.api:
+        class: AppBundle\Services\OmdbApiService
