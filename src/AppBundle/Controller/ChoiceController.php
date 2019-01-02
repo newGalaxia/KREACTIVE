@@ -58,18 +58,35 @@ class ChoiceController extends Controller
     }
 
     /**
-     * @Route("/choices/{id}", name="get_choices", methods={"GET"})
+     * @Route("/choicesByUser/{id}", name="get_choices_user", methods={"GET"})
      */
     public function getChoicesByUserId($id)
     {
-        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $user = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:User')
+            ->find($id);
+        $formatted = [];
+        foreach($user->getChoices() as $choice){
+            $formatted[ $choice->getFilm()->getImdbId()] =  [
+                    $choice->getFilm()->getTitle(),
+                    $choice->getFilm()->getPoster()
+                ];
+        }
+        return new JsonResponse($formatted);
 
-        $choices = $entityManager
-            ->getRepository('AppBundle:Choice')
-            ->findBy("userId", $id);
-        dump($choices);
-        die;
     }
+
+    /**
+     * @Route("/bestChoice", name="get_best_choice", methods={"GET"})
+     */
+    public function getBestChoice()
+    {
+        $bestFilm = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:Choice')
+            ->findBestFilm();
+       
+    }
+
 
 
     /**
@@ -131,4 +148,5 @@ class ChoiceController extends Controller
 
         return $film;
     }
+
 }
