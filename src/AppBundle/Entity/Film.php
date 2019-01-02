@@ -6,9 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="choice")
+ * @ORM\Table(name="film")
  */
-class Choice
+class Film
 {
     /**
      * @ORM\Id
@@ -22,8 +22,6 @@ class Choice
      */
     private $imdbId;
 
-    
-
     /**
      * @ORM\Column(type="string")
      */
@@ -33,6 +31,70 @@ class Choice
      * @ORM\Column(type="string")
      */
     private $poster;
+
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param integer $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImdbId()
+    {
+        return $this->imdbId;
+    }
+
+    /**
+     * @param string $imdbId
+     */
+    public function setImdbId($imdbId)
+    {
+        $this->imdbId = $imdbId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPoster()
+    {
+        return $this->poster;
+    }
+
+    /**
+     * @param string $poster
+     */
+    public function setPoster($poster)
+    {
+        $this->poster = $poster;
+    }
 
 
 }
