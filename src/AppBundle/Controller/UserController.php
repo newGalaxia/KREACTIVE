@@ -20,8 +20,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/users", name="users_list")
-     * @Method({"GET"})
+     * @Route("/users", name="users_list", methods={"GET"})
      */
     public function getUsersAction(Request $request)
     {
@@ -32,6 +31,29 @@ class UserController extends Controller
         $formatted = [];
         foreach ($users as $user) {
            $films = $this->getFilmList($user->getChoices());
+            $formatted[] = [
+                'id' => $user->getId(),
+                'pseudo' => $user->getPseudo(),
+                'choices' => $films,
+            ];
+        }
+
+        return new JsonResponse($formatted);
+    }
+
+    /**
+     * @Route("/users/{idFilm}", name="users_list_by_film")
+     * @Method({"GET"})
+     */
+    public function getUsersByIdFilmAction(Request $request)
+    {
+        $users = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:User')
+            ->find();
+
+        $formatted = [];
+        foreach ($users as $user) {
+            $films = $this->getFilmList($user->getChoices());
             $formatted[] = [
                 'id' => $user->getId(),
                 'pseudo' => $user->getPseudo(),

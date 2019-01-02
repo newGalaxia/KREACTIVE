@@ -57,6 +57,57 @@ class ChoiceController extends Controller
         }
     }
 
+    /**
+     * @Route("/choicesByUser/{id}", name="get_choices_user", methods={"GET"})
+     */
+    public function getChoicesByUserId($id)
+    {
+        $user = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:User')
+            ->find($id);
+        $formatted = [];
+        foreach($user->getChoices() as $choice){
+            $formatted[ $choice->getFilm()->getImdbId()] =  [
+                    $choice->getFilm()->getTitle(),
+                    $choice->getFilm()->getPoster()
+                ];
+        }
+        return new JsonResponse($formatted);
+
+    }
+
+    /**
+     * @Route("/bestChoice", name="get_best_choice", methods={"GET"})
+     */
+    public function getBestChoice()
+    {
+        $bestFilm = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:Choice')
+            ->findBestFilm();
+       
+    }
+
+
+
+    /**
+     * @Route("/choice/{id}", name="delete_choice", methods={"DELETE"})
+     */
+    public function deleteChoice($id)
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $choice = $entityManager
+            ->getRepository('AppBundle:Choice')
+            ->find($id);
+        if($choice !== null){
+            $entityManager->remove($choice);
+            $entityManager->flush();
+            return New JsonResponse("suppression réussie", 201);
+        }
+        return New JsonResponse("Ressource introuvable", 401);
+    }
+
+
     private function fillUser($choice, $userId)
     {
         if (isset($userId)) {
@@ -97,4 +148,5 @@ class ChoiceController extends Controller
 
         return $film;
     }
+
 }
