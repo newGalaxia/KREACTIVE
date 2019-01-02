@@ -1,0 +1,12 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: localhost
+    database_name: kreactive
+    database_user: root
+    database_password: root
+    database_port: 8889
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: 2a6c46c9eef7c65d585a3db7f2aac454443fe132
