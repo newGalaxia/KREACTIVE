@@ -57,6 +57,40 @@ class ChoiceController extends Controller
         }
     }
 
+    /**
+     * @Route("/choices/{id}", name="get_choices", methods={"GET"})
+     */
+    public function getChoicesByUserId($id)
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $choices = $entityManager
+            ->getRepository('AppBundle:Choice')
+            ->findBy("userId", $id);
+        dump($choices);
+        die;
+    }
+
+
+    /**
+     * @Route("/choice/{id}", name="delete_choice", methods={"DELETE"})
+     */
+    public function deleteChoice($id)
+    {
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        $choice = $entityManager
+            ->getRepository('AppBundle:Choice')
+            ->find($id);
+        if($choice !== null){
+            $entityManager->remove($choice);
+            $entityManager->flush();
+            return New JsonResponse("suppression réussie", 201);
+        }
+        return New JsonResponse("Ressource introuvable", 401);
+    }
+
+
     private function fillUser($choice, $userId)
     {
         if (isset($userId)) {
