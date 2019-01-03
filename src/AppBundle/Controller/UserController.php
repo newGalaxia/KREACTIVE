@@ -73,6 +73,13 @@ class UserController extends Controller
         if ($request->getContent()) {
             $content = json_decode($request->getContent(), true);
         }
+
+        $isValid = $this->checkData($content);
+
+        if (!$isValid) {
+            return New JsonResponse("erreur : données manquantes ou erronées",401);
+
+        }
         $user = New User();
         if (isset($content['pseudo'])) {
             $user->setPseudo($content['pseudo']);
@@ -103,6 +110,16 @@ class UserController extends Controller
                 ];
         }
         return $films;
+    }
+
+    private function checkData($content)
+    {
+        if (isset($content['pseudo']) AND isset($content['email'])) {
+            if (preg_match('#^[\w.-]+@[\w.-]+\.[a-z]{2,6}$#i', $content["email"])) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

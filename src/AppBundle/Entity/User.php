@@ -27,7 +27,6 @@ class User
 
     /**
      * @ORM\Column(name="email", type="string", length=255, unique=true)
-     * @Assert\Email
      */
     private $email;
 
@@ -47,7 +46,6 @@ class User
 
     /**
      * @ORM\OneToMany(targetEntity=Choice::class, mappedBy="user")
-     * @Assert\Count(max = 3)
      */
     private $choices;
 
