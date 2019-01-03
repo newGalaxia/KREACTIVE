@@ -20,6 +20,7 @@ class ChoiceController extends Controller
     }
 
     /**
+     *
      * @Route("/choice", name="post_choice", methods={"POST"})
      */
     public function createChoice(Request $request)
@@ -77,14 +78,38 @@ class ChoiceController extends Controller
     }
 
     /**
-     * @Route("/bestChoice", name="get_best_choice", methods={"GET"})
+     * @Route("/UsersByFilm/{idFilm}", name="get_users_film", methods={"GET"})
+     */
+    public function getUsersByFilm($idFilm)
+    {
+        $film = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:Film')
+            ->findBy(["imdbId" => $idFilm]);
+
+        $user = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:Choice')
+            ->findBy(["film" => $film ]);
+        $formatted = [];
+        foreach($user->getChoices() as $choice){
+            $formatted[ $choice->getFilm()->getImdbId()] =  [
+                $choice->getFilm()->getTitle(),
+                $choice->getFilm()->getPoster()
+            ];
+        }
+        return new JsonResponse($formatted);
+
+    }
+
+    /**
+     * @Route("/bestFilm", name="get_best_film", methods={"GET"})
      */
     public function getBestChoice()
     {
         $bestFilm = $this->get('doctrine.orm.entity_manager')
             ->getRepository('AppBundle:Choice')
             ->findBestFilm();
-       
+       dump($bestFilm);
+       die;
     }
 
 
@@ -107,7 +132,12 @@ class ChoiceController extends Controller
         return New JsonResponse("Ressource introuvable", 401);
     }
 
-
+    /**
+     * update choice entity with user if exist
+     * @param $choice
+     * @param $userId
+     * @return bool
+     */
     private function fillUser($choice, $userId)
     {
         if (isset($userId)) {
@@ -126,13 +156,18 @@ class ChoiceController extends Controller
         }
     }
 
+    /**
+     * insert the data film if it is not in database
+     * @param $newFilm
+     * @return Film
+     */
     private function updateFilmList($newFilm)
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
 
         $film = $entityManager
             ->getRepository('AppBundle:Film')
-            ->find($newFilm['imdbID']);
+            ->findBy(["imdbId" => $newFilm['imdbID']]);
 
         if ($film === null) {
             $filmToSave = new Film();

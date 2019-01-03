@@ -1,0 +1,5 @@
+!.gitkeep
+
+/bin/*
+/tmp/*
+/var/cache/*
