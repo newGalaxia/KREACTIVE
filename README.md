@@ -13,7 +13,7 @@ format de retour: JSON
     - Creation d'un choix
          chemin : /choice
          méthode : POST
-         Données obligatoires : user (User), film (Film)  
+         Données obligatoires : user_id (int), film_imdbId (string)  
     
     - Suppression d'un choix
          chemin : /choice/{id}
