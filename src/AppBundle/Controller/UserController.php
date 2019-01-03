@@ -96,12 +96,11 @@ class UserController extends Controller
     {
         $films = [];
         foreach($choices as $choice){
-            $films = [ $choice->getFilm()->getImdbId() =>
+            $films[$choice->getFilm()->getImdbId()] =
                 [
                     "title" => $choice->getFilm()->getTitle(),
                     "poster" => $choice->getFilm()->getPoster()
-                ]
-            ];
+                ];
         }
         return $films;
     }

@@ -6,7 +6,7 @@ use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ChoiceRepository")
  * @ORM\Table(name="choices", uniqueConstraints={ @ORM\UniqueConstraint(name="user_film_unique", columns={"user_id", "film_id"})})
  */
 class Choice
