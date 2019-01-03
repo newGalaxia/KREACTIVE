@@ -39,6 +39,11 @@ class ChoiceController extends Controller
                 return New JsonResponse("echec : cet utilisateur n'existe pas", 401);
             }
 
+            //choices number must be < 3
+            $nbChoices = $this->checkChoicesNumber($content['user_id']);
+            if ($nbChoices === false) {
+                return New JsonResponse("echec : vous ne pouvez pas choisir plus de 3 films", 401);
+            }
             //check if film exist in api omdb
             $film = $this->omdbapiService->getFilm($content['film_imdbId']);
             if ($film === false ) {
@@ -108,8 +113,7 @@ class ChoiceController extends Controller
         $bestFilm = $this->get('doctrine.orm.entity_manager')
             ->getRepository('AppBundle:Choice')
             ->findBestFilm();
-       dump($bestFilm);
-       die;
+
     }
 
 
@@ -182,6 +186,21 @@ class ChoiceController extends Controller
         }
 
         return $film;
+    }
+
+    private function checkChoicesNumber($userId){
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $user = $entityManager
+            ->getRepository('AppBundle:User')
+            ->find($userId);
+
+        $choices = $entityManager
+            ->getRepository('AppBundle:Choice')
+            ->findBy(["user" => $user]);
+        if(count($choices) === 3) {
+            return false;
+        };
+        return true;
     }
 
 }
